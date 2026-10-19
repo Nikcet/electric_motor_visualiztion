@@ -1,0 +1,129 @@
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-2: #263449;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --green: #22c55e;
+  --yellow: #facc15;
+  --red: #ef4444;
+  --blue: #3b82f6;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: radial-gradient(circle at top, #16233d 0%, var(--bg) 60%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.app { max-width: 1200px; margin: 0 auto; padding: 24px 16px 40px; }
+
+.app__header h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  color: var(--accent);
+}
+
+.subtitle { margin: 0 0 20px; color: var(--muted); max-width: 860px; line-height: 1.5; }
+
+.demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) { .demo { grid-template-columns: 1fr; } }
+
+.canvas-wrap {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+canvas { display: block; width: 100%; height: auto; border-radius: 10px; }
+
+.controls {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 18px 18px 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.controls h2 { margin: 0 0 14px; font-size: 1.15rem; color: var(--text); }
+
+.control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--panel-2);
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.control__label { flex: 1 1 100%; font-size: 0.9rem; color: var(--muted); }
+
+.control__value {
+  font-weight: 600; font-size: 0.85rem;
+  color: var(--accent); min-width: 64px; text-align: right;
+}
+
+/* Переключатели */
+.switch { position: relative; display: inline-block; width: 58px; height: 30px; flex: none; }
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background-color: #475569; transition: 0.25s;
+}
+
+.slider:before {
+  position: absolute; content: "";
+  height: 22px; width: 22px; left: 4px; top: 4px;
+  background-color: #f1f5f9; transition: 0.25s;
+  border-radius: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+input:checked + .slider { background-color: var(--green); }
+
+input:checked + .slider.polarity-slider,
+.switch.polarity input:checked + .slider { background-color: var(--yellow); }
+
+input:checked + .slider:before { transform: translateX(28px); }
+.slider.round { border-radius: 30px; }
+
+/* Ползунок скорости */
+input[type="range"] { flex: 1; accent-color: var(--accent); min-width: 120px; }
+
+/* Легенда */
+.legend h3 { margin: 6px 0 8px; font-size: 0.95rem; }
+.legend ul { list-style: none; margin: 0; padding: 0; font-size: 0.82rem; color: var(--muted); }
+.legend li { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+
+.chip {
+  width: 16px; height: 16px; border-radius: 4px; flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+.chip--north { background: var(--red); }
+.chip--south { background: var(--blue); }
+.chip--current { background: var(--yellow); }
+.chip--force { background: var(--green); }
+.chip--plus { background: #fff; color: var(--red); font-weight: bold; }
+.chip--minus { background: #334155; }
+
+.hint {
+  margin-top: 14px; padding: 10px 12px;
+  background: rgba(56, 189, 248, 0.12);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px; font-size: 0.82rem; line-height: 1.45; color: #bae6fd;
+}
+
+.app__footer { margin-top: 22px; color: var(--muted); text-align: center; }

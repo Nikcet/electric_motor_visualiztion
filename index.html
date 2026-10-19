@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Интерактивная демонстрация электродвигателя</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app__header">
+      <h1>Как работает электродвигатель</h1>
+      <p class="subtitle">
+        Схематичная интерактивная модель: рамка с током в магнитном поле.
+        Переключатели меняют направление тока и включают/выключают вращение.
+      </p>
+    </header>
+
+    <section class="demo">
+      <div class="canvas-wrap">
+        <canvas id="motorCanvas" width="760" height="520" aria-label="Схема электродвигателя"></canvas>
+      </div>
+
+      <aside class="controls">
+        <h2>Управление</h2>
+
+        <div class="control">
+          <span class="control__label">Вращение двигателя</span>
+          <label class="switch">
+            <input type="checkbox" id="toggleRotation" checked />
+            <span class="slider round"></span>
+          </label>
+          <span class="control__value" id="rotationState">Вкл</span>
+        </div>
+
+        <div class="control">
+          <span class="control__label">Полярность источника (смена направления)</span>
+          <label class="switch polarity">
+            <input type="checkbox" id="togglePolarity" />
+            <span class="slider round"></span>
+          </label>
+          <span class="control__value" id="polarityState">Прямая</span>
+        </div>
+
+        <div class="control">
+          <span class="control__label">Скорость вращения</span>
+          <input type="range" id="speedRange" min="0.2" max="2" step="0.1" value="0.6" />
+          <span class="control__value" id="speedValue">0.6×</span>
+        </div>
+
+        <div class="legend">
+          <h3>Обозначения</h3>
+          <ul>
+            <li><span class="chip chip--north"></span> Полюс магнита N (красный)</li>
+            <li><span class="chip chip--south"></span> Полюс магнита S (синий)</li>
+            <li><span class="chip chip--current"></span> Зона с током «к нам» (жёлтая подсветка)</li>
+            <li><span class="chip chip--force"></span> Сила Ампера, толкает проводник</li>
+            <li><span class="chip chip--plus"></span> «+» полюс батареи</li>
+            <li><span class="chip chip--minus"></span> «−» полюс батареи</li>
+          </ul>
+        </div>
+
+        <div class="hint" id="hintBox">
+          Проводники рамки, по которым течёт ток, подсвечиваются жёлтым.
+          На них действуют силы (зелёные стрелки), которые создают вращающий момент.
+        </div>
+      </aside>
+    </section>
+
+    <footer class="app__footer">
+      <small>Демонстрация для школьного курса физики · тема: действие магнитного поля на проводник с током</small>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
