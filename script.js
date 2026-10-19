@@ -1,17 +1,3 @@
-/* =========================================================
-   Интерактивная демонстрация электродвигателя постоянного тока
-   Рамка с током (ротор) между полюсами постоянного магнита
-   + коллектор и щётки, подключённые к батарее.
-
-   Наглядность:
-   - проводники с током подсвечиваются жёлтым «свечением»;
-   - на активных проводниках показаны силы Ампера (зелёные стрелки);
-   - направления тока в поперечных сечениях: точка (к нам) / крест (от нас);
-   - переключатель полярности разворачивает батарею -> ток течёт обратно
-     -> двигатель крутится в другую сторону;
-   - переключатель вращения включает/выключает движение.
-   ========================================================= */
-
 "use strict";
 
 const canvas = document.getElementById("motorCanvas");
@@ -196,7 +182,6 @@ function drawCircuit() {
     ctx.save();
 
     // Щётки — две серые колодки над коллектором
-    ctx.fillStyle = "#475569";
     roundRect(CX - 78, 372, 40, 16, 4, "#475569");
     roundRect(CX + 38, 372, 40, 16, 4, "#475569");
     label("щётка", CX - 58, 402, COLORS.muted, "12px Segoe UI");
@@ -273,9 +258,9 @@ function drawRotor() {
     const cosA = Math.cos(angle);
     const sinA = Math.sin(angle);
 
-    // Положения двух "активных" сторон (поперечных сечений)
+    // Положения двух "активных" сторон (поперечные сечения)
     const ax = CX + RADIUS * cosA;
-    const ay = CY - RADIUS * sinA; // ось Y на экране вниз — инвертируем
+    const ay = CY - RADIUS * sinA; // ось Y на экране направлена вниз — инвертируем
     const bx = CX - RADIUS * cosA;
     const by = CY + RADIUS * sinA;
 
@@ -393,30 +378,34 @@ function drawCommutator(rot) {
 }
 
 function drawTorqueArc() {
-    // Фиолетовая дуга со стрелкой — показывает направление вращения ротора.
+    // Фиолетовая дуга со стрелкой показывает направление вращения ротора.
     //
-    // ВАЖНО (исправлено): в canvas ось Y направлена ВНИЗ, а точка A рисуется
-    // как (CX + R*cos(angle), CY − R*sin(angle)). Поэтому при росте `angle`
-    // (direction = +1) рамка на экране крутится ПРОТИВ часовой стрелки.
-    // Значит параметр anticlockwise у ctx.arc() должен быть равен
-    // (direction === 1), иначе стрелка момента смотрит против вращения.
+    // КЛЮЧЕВОЙ МОМЕНТ (исправление): в canvas ось Y направлена ВНИЗ.
+    // Точка A рисуется как (CX + R*cos(angle), CY − R*sin(angle)),
+    // поэтому при росте `angle` (direction = +1) рамка на экране
+    // движется ПРОТИВ часовой стрелки. Чтобы дуга момента совпадала
+    // с фактическим направлением вращения, параметр anticlockwise
+    // должен быть равен (direction === 1).
     const r = 150;
-    const ccw = direction === 1; // direction=+1 -> против часовой на экране
-    const start = angle + (ccw ? -0.35 : 0.35);
-    const sweep = ccw ? -0.9 : 0.9;
+    const ccw = direction === 1; // direction=+1 -> против часовой стрелки на экране
+
+    // Начинаем немного «позади» текущего угла и ведём дугу на ~0.9 рад
+    // строго в ту же сторону, куда реально крутится ротор.
+    const start = angle + (ccw ? 1.25 : -1.25);
+    const end = angle + (ccw ? 0.35 : -0.35);
 
     ctx.save();
     ctx.strokeStyle = COLORS.torqueArc;
     ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.arc(CX, CY, r, start, start + sweep, ccw);
+    ctx.arc(CX, CY, r, start, end, ccw);
     ctx.stroke();
 
     // Наконечник стрелки на конце дуги — по касательной в сторону вращения.
-    const endAng = start + sweep;
-    const ex = CX + r * Math.cos(endAng);
-    const ey = CY + r * Math.sin(endAng);
-    const tangent = endAng + (ccw ? -Math.PI / 2 : Math.PI / 2);
+    const ex = CX + r * Math.cos(end);
+    const ey = CY + r * Math.sin(end);
+    // Касательная: при ccw она получается поворотом радиуса на −90°, иначе +90°.
+    const tangent = end + (ccw ? -Math.PI / 2 : Math.PI / 2);
     const hx = ex + 14 * Math.cos(tangent);
     const hy = ey + 14 * Math.sin(tangent);
     drawArrow(ex, ey, hx, hy, COLORS.torqueArc, 4, 12);
